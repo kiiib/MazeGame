@@ -12,7 +12,7 @@ public class InitMaze : MonoBehaviour {
     [Tooltip("Maze's Height")]
     public int MazeHeight = 10; // Maze's Height
 
-    private Stack<GameObject> Grid; // record the maze
+    private Stack<GameObject> Grid = new Stack<GameObject>(); // record the maze
 
 	// Use this for initialization
 	void Start () {
@@ -21,15 +21,21 @@ public class InitMaze : MonoBehaviour {
             for (int j = 0; j < MazeWidth; j++) {
                 GameObject newCell;
                 newCell = Instantiate(Cell, new Vector3(i, 0, j), Quaternion.identity);
-                Grid.Push(newCell);
-                newCell.name = "Cell" + i + j;
-                
+                string newCellName = "Cell" + i + j;
+                newCell.name = newCellName;
+                // push each cell into Grid
+                Grid.Push(GameObject.Find(newCellName));
             }
         }
+        
     }
 	
-	// Update is called once per frame
-	void Update () {
+    private void checkNeighbors() {
+
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }
