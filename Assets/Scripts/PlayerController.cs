@@ -53,4 +53,6 @@ public class PlayerController : MonoBehaviour {
         rotateXTransform.transform.localEulerAngles = new Vector3(-currentRotateX, 0, 0);
 
     }
+
+
 }

@@ -63,7 +63,6 @@ public class InitMaze : MonoBehaviour {
 	
     private GameObject checkNeighbors(GameObject currentCell) {
         List<GameObject> neighbors = new List<GameObject>(); // record neighbors
-        CellParameter currentCellParameter = currentCell.GetComponent<CellParameter>();
         float x = currentCell.transform.position.x;
         float z = currentCell.transform.position.z;
 
