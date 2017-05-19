@@ -10,7 +10,6 @@ public class CellParameter : MonoBehaviour {
     public GameObject wallLeft;
     public GameObject wallBottom;
     public bool isVisited = false;
-    public Stack<GameObject> neighbors = new Stack<GameObject>();
 
     // Use this for initialization
     void Start () {
