@@ -34,11 +34,29 @@ public class InitMaze : MonoBehaviour {
             }
         }
         // Check Neighbors and remove walls
-        //GameObject currentCell = GameObject.Find(startCellName);
-        //currentCell.GetComponent<CellParameter>().isVisited = true;
-        //do {
-        //    GameObject Cell = checkNeighbors(currentCell);
-        //} while (currentCell.GetComponent<CellParameter>().cellNumber != 0);
+        List<GameObject> cellPath = new List<GameObject>(); // record the maze created path
+        GameObject currentCell = GameObject.Find(startCellName);
+        currentCell.GetComponent<CellParameter>().isVisited = true;
+        do {
+            GameObject nextCell = checkNeighbors(currentCell);
+
+            // if exist neighbor which haven't been visited
+            if (nextCell) {
+                // mark the next cell is visited
+                Grid[nextCell.GetComponent<CellParameter>().cellNumber].GetComponent<CellParameter>().isVisited = true;
+                // push the current cell into list
+                cellPath.Add(currentCell);
+                // remove the wall between the current cell and the chosen cell
+                removeWalls(currentCell, nextCell);
+                // set it to be the next one
+                currentCell = nextCell;
+                //Debug.Log("next cell number is " + nextCell.GetComponent<CellParameter>().cellNumber);
+            } else {
+                int lastElementIndex = cellPath.Count - 1;
+                cellPath.RemoveAt(lastElementIndex);
+                currentCell = cellPath[lastElementIndex - 1];
+            }
+        } while (currentCell.GetComponent<CellParameter>().cellNumber != 0);
     }
 	
     private GameObject checkNeighbors(GameObject currentCell) {
@@ -46,47 +64,79 @@ public class InitMaze : MonoBehaviour {
         CellParameter currentCellParameter = currentCell.GetComponent<CellParameter>();
         float x = currentCell.transform.position.x;
         float z = currentCell.transform.position.z;
-        
+
         // figure out the edge problem
-        if(z - 1 >= 0) {
-            GameObject celltop = Grid[getIndex(x, z - 1)];
-            if (!celltop.GetComponent<CellParameter>().isVisited) {
-                neighbors.Add(celltop);
+        if (z - 1 >= 0) {
+            GameObject cellLeft = Grid[getIndex(x, z - 1)];
+            if (!cellLeft.GetComponent<CellParameter>().isVisited) {
+                neighbors.Add(cellLeft);
             }
         }
         if (x + 1 < MazeWidth) {
-            GameObject cellRight = Grid[getIndex(x + 1, z)];
-            if (!cellRight.GetComponent<CellParameter>().isVisited) {
-                neighbors.Add(cellRight);
-            }
-        }
-
-        if (z + 1 < MazeWidth) {
-            GameObject cellBottom = Grid[getIndex(x, z + 1)];
+            GameObject cellBottom = Grid[getIndex(x + 1, z)];
             if (!cellBottom.GetComponent<CellParameter>().isVisited) {
                 neighbors.Add(cellBottom);
             }
         }
-
+        if (z + 1 < MazeWidth) {
+            GameObject cellRight = Grid[getIndex(x, z + 1)];
+            if (!cellRight.GetComponent<CellParameter>().isVisited) {
+                neighbors.Add(cellRight);
+            }
+        }
         if (x - 1 >= 0) {
-            GameObject cellLeft = Grid[getIndex(x - 1, z)];
-            if (!cellLeft.GetComponent<CellParameter>().isVisited) {
-                neighbors.Add(cellLeft);
+            GameObject cellTop = Grid[getIndex(x - 1, z)];
+            if (!cellTop.GetComponent<CellParameter>().isVisited) {
+                neighbors.Add(cellTop);
             }
         }
         // if neighors are exist, pick up a random neigbor
         if (neighbors.Count > 0) {
             Random.seed = System.Guid.NewGuid().GetHashCode();
-            int randomNeighborIndex = Random.Range(0, 3);
+            int randomNeighborIndex = Random.Range(0, neighbors.Count - 1);
+            //Debug.Log("randomNeighborIndex " + randomNeighborIndex);
+            return neighbors[randomNeighborIndex];
+        }else {
+            return null;
         }
-        return null;
     }
+
     private int getIndex(float x, float z) {
-        //figure out the invalid index
+        // figure out the invalid index
         if (x < 0 || z < 0 || x > MazeWidth - 1 || z > MazeWidth - 1)
             return -1;
+        return (int)(x * MazeWidth + z);   // depends on MazeWidth, grid(MazeWidth x MazeWidth)
+    }
 
-        return (int)(x + z * MazeWidth);   // depends on MazeWidth, grid(MazeWidth x MazeWidth)
+    private void removeWalls(GameObject currentCell, GameObject neighborCell) {
+        int currentCellNumber = currentCell.GetComponent<CellParameter>().cellNumber;
+        int neighborCellNumber = neighborCell.GetComponent<CellParameter>().cellNumber;
+        //Debug.Log("current cell number is " + currentCellNumber + " neighbor cell number is " + neighborCellNumber);
+        int x = (int) (currentCell.transform.position.x - neighborCell.transform.position.x);
+        int z = (int) (currentCell.transform.position.z - neighborCell.transform.position.z);
+
+        // childs' index: 0 top wall, 1 right wall, 2 bottom wall, 3 left wall
+        // current cell's left wall and neighbor cell's right wall
+        if (z == 1) {
+            Grid[currentCellNumber].transform.GetChild(3).gameObject.SetActive(false);
+            Grid[neighborCellNumber].transform.GetChild(1).gameObject.SetActive(false);
+        }
+        // current cell's right wall and neighbor cell's left wall
+        if (z == -1) {
+            Grid[currentCellNumber].transform.GetChild(1).gameObject.SetActive(false);
+            Grid[neighborCellNumber].transform.GetChild(3).gameObject.SetActive(false);
+        }
+        // current cell's top wall and neighbor cell's bottom wall
+        if (x == 1) {
+            Grid[currentCellNumber].transform.GetChild(0).gameObject.SetActive(false);
+            Grid[neighborCellNumber].transform.GetChild(2).gameObject.SetActive(false);
+        }
+        // current cell's bottom wall and neighbor cell's top wall
+        if (x == -1) {
+            Grid[currentCellNumber].transform.GetChild(2).gameObject.SetActive(false);
+            Grid[neighborCellNumber].transform.GetChild(0).gameObject.SetActive(false);
+        }
+
     }
 
     // Update is called once per frame
