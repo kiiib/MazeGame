@@ -54,23 +54,30 @@ public class InitMaze : MonoBehaviour {
                 neighbors.Add(celltop);
             }
         }
-        if (z - 1 >= 0) {
-            GameObject celltop = Grid[getIndex(x, z - 1)];
-            if (!celltop.GetComponent<CellParameter>().isVisited) {
-                neighbors.Add(celltop);
+        if (x + 1 < MazeWidth) {
+            GameObject cellRight = Grid[getIndex(x + 1, z)];
+            if (!cellRight.GetComponent<CellParameter>().isVisited) {
+                neighbors.Add(cellRight);
             }
         }
-        if (z - 1 >= 0) {
-            GameObject celltop = Grid[getIndex(x, z - 1)];
-            if (!celltop.GetComponent<CellParameter>().isVisited) {
-                neighbors.Add(celltop);
+
+        if (z + 1 < MazeWidth) {
+            GameObject cellBottom = Grid[getIndex(x, z + 1)];
+            if (!cellBottom.GetComponent<CellParameter>().isVisited) {
+                neighbors.Add(cellBottom);
             }
         }
-        if (z - 1 >= 0) {
-            GameObject celltop = Grid[getIndex(x, z - 1)];
-            if (!celltop.GetComponent<CellParameter>().isVisited) {
-                neighbors.Add(celltop);
+
+        if (x - 1 >= 0) {
+            GameObject cellLeft = Grid[getIndex(x - 1, z)];
+            if (!cellLeft.GetComponent<CellParameter>().isVisited) {
+                neighbors.Add(cellLeft);
             }
+        }
+        // if neighors are exist, pick up a random neigbor
+        if (neighbors.Count > 0) {
+            Random.seed = System.Guid.NewGuid().GetHashCode();
+            int randomNeighborIndex = Random.Range(0, 3);
         }
         return null;
     }
