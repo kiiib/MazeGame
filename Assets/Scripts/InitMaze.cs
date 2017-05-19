@@ -16,6 +16,7 @@ public class InitMaze : MonoBehaviour {
     
     // Use this for initialization
     void Start () {
+        
         int cellNumber = 0;
         CellParameter newCellParameters = new CellParameter();
         // Init the maze
@@ -38,6 +39,7 @@ public class InitMaze : MonoBehaviour {
         GameObject currentCell = GameObject.Find(startCellName);
         currentCell.GetComponent<CellParameter>().isVisited = true;
         do {
+            
             GameObject nextCell = checkNeighbors(currentCell);
 
             // if exist neighbor which haven't been visited
@@ -92,7 +94,7 @@ public class InitMaze : MonoBehaviour {
         }
         // if neighors are exist, pick up a random neigbor
         if (neighbors.Count > 0) {
-            Random.seed = System.Guid.NewGuid().GetHashCode();
+            
             int randomNeighborIndex = Random.Range(0, neighbors.Count - 1);
             //Debug.Log("randomNeighborIndex " + randomNeighborIndex);
             return neighbors[randomNeighborIndex];
@@ -141,6 +143,6 @@ public class InitMaze : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
-	}
+        
+    }
 }
