@@ -21,10 +21,10 @@ public class PlayerController : MonoBehaviour {
     void Update() {
         //決定鍵盤input的結果
         Vector3 movDirection = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) { movDirection.z += 1; }
-        if (Input.GetKey(KeyCode.S)) { movDirection.z -= 1; }
-        if (Input.GetKey(KeyCode.D)) { movDirection.x += 1; }
-        if (Input.GetKey(KeyCode.A)) { movDirection.x -= 1; }
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) { movDirection.z += 1; }
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) { movDirection.z -= 1; }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) { movDirection.x += 1; }
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) { movDirection.x -= 1; }
         movDirection = movDirection.normalized;
 
         //決定要給Animator的動畫參數

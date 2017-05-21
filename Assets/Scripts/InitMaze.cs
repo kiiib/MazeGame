@@ -13,7 +13,8 @@ public class InitMaze : MonoBehaviour {
     public string startCellName = "Cell00";
 
     private List<GameObject> Grid = new List<GameObject>(); // record the maze
-    
+    private float lastRandomNumber = 0;   // record created random number last created, for avoiding create same random number in short period
+
     // Use this for initialization
     void Start () {
         
@@ -93,8 +94,13 @@ public class InitMaze : MonoBehaviour {
         }
         // if neighors are exist, pick up a random neigbor
         if (neighbors.Count > 0) {
-            
             int randomNeighborIndex = Random.Range(0, neighbors.Count - 1);
+            if (randomNeighborIndex == lastRandomNumber)
+                randomNeighborIndex++;
+            if (randomNeighborIndex > neighbors.Count - 1)
+                randomNeighborIndex = 0;
+
+            lastRandomNumber = randomNeighborIndex;
             //Debug.Log("randomNeighborIndex " + randomNeighborIndex);
             return neighbors[randomNeighborIndex];
         }else {
